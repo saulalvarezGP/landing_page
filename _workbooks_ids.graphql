@@ -3,6 +3,7 @@ query EmbeddedDS{
     
     {
         id
+        luid
         name
         projectName
         #owner{name}

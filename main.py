@@ -1,5 +1,4 @@
 import warnings; warnings.filterwarnings('ignore')
-from datetime import datetime as dt
 import tableauserverclient as TSC
 import pandas as pd
 
@@ -89,12 +88,33 @@ def get_workbook_owners(server,df_wbs):
     df_wbs = df_wbs.merge(df, on='id', how='left')
     return df_wbs
 
+def save_thumbnails(server,df):
+    
+    for i,row in df.iterrows():
+        # if i > 0: continue
+        print(i,row.luid,f'{(i+1)/df.shape[0]:.1%}')
+        workbooks = server.workbooks
+        workbook = workbooks.get_by_id(row.luid)
+        workbooks.populate_preview_image(workbook) #<-- obligatorio
+        
+        open(f'thumbnails/{row.luid}.png', 'wb').write(workbook.preview_image)
+
 def get_workbook_ids(server):
     graphQL = open('_workbooks_ids.graphql','r').read()
     data = server.metadata.query(graphQL)
     data = pd.DataFrame(data['data']['workbooks'])
     data['url']     = 'https://us-east-1.online.tableau.com/#/site/globalizationpartners/workbooks/'+data.vizportalUrlId+'/views'
-    data['img_url'] = 'https://us-east-1.online.tableau.com/vizportal/api/rest/v1/workbooks/'+data.vizportalUrlId+'/thumbnail'
+    # data['img_url'] = 'https://us-east-1.online.tableau.com/vizportal/api/rest/v1/workbooks/'+data.vizportalUrlId+'/thumbnail'
+    
+    
+    import numpy as np
+    data['img_url'] = data.url.apply(lambda _ : [
+        'https://images.klipfolio.com/website/public/22b133bc-124d-44f4-85f8-9170b08d3ce9/dashboard-examples-hero.png',
+        r'https://blog.bismart.com/hs-fs/hubfs/captura%20dashboard%20cuadro%20de%20mando%20bismart%20customer%20journey.jpg?width=1928&name=captura%20dashboard%20cuadro%20de%20mando%20bismart%20customer%20journey.jpg',
+        r'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2OxYTWo1PuFOUUvUd0ViDCZuR8TUqI58L0Q&usqp=CAU'
+    ][np.random.randint(0,2+1)]
+    )
+    print(data)
     return data
 
 def main():
@@ -107,11 +127,13 @@ def main():
     server.auth.sign_in(tableau_auth)
 
     df_wbs = get_workbook_ids(server)
-    print(df_wbs)
     df_wbs.to_csv('01_workbooks.csv', index=False)
+    save_thumbnails(server,df_wbs)
+    return
     
     df_wbs = get_workbook_owners(server, df_wbs)
     df_wbs.to_csv('01_workbooks_with_owners.csv', index=False)
+    return
     
     # df_ds  = get_customquery_previous(server, df_wbs)
     # df_ds.to_csv('02_customqueries_tables.csv', index=False)
@@ -120,34 +142,5 @@ def main():
     # df_tables.to_csv('03_full_table_extraction.csv', index=False)
 
 
-def sandbox():
-    query_string = open('_workbooks_owners.graphql','r').read() #<--- esto solo lee el texto del archivo
-
-    ls_ids = [123,432,324,234,4534,5,23] 
-
-    for id in ls_ids:
-        print('corriendo\n',query_string,'\n'*5)
-        query_string = query_string.replace(r'${id}',str(id)) #<--- esto sustituye la variable por algun valor
-        
-
-def get_thumbnail():
-    img_url =  f'https://us-east-1.online.tableau.com/vizportal/api/rest/v1/workbooks/{1036635}/thumbnail'
-    print(img_url)
-    # return
-    tableau_auth = TSC.PersonalAccessTokenAuth(
-        'mi_token2', 
-        '3RoLZiAITXif4GwgkeI5WQ==:q1dyfCvtcFG8vN1aOnVrLrsGwvg9iVWu', 
-        'globalizationpartners'
-    )
-    server = TSC.Server('https://us-east-1.online.tableau.com', use_server_version=True)
-    server.auth.sign_in(tableau_auth)
-    wb_id = '6b937802-ac55-9fa0-ed2f-427628ad0bb9'
-    data = server.metadata.query(open('_workbooks_img.graphql','r').read().replace(r'${id}',wb_id))
-    data = data['data']['workbooks']
-    print(pd.DataFrame(data))
-
-
 if __name__=='__main__':
     main()
-    # sandbox()
-    # get_thumbnail()
