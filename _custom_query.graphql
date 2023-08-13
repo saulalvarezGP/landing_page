@@ -1,0 +1,24 @@
+query EmbeddedDS{
+    workbooks
+    (filter: {id:"${id}"})
+    {
+        id
+        embeddedDS: embeddedDatasources{
+            datasourceName: name
+            fields {
+                fieldName: name
+                ...on ColumnField{
+                    columns{
+                        table{
+                            ...on CustomSQLTable{
+                                customSQLName: name
+                                connectionType
+                                query
+                            }
+                        }
+                    }
+                }
+            }
+        } 
+    }   
+}

@@ -1,0 +1,14 @@
+query EmbeddedDS{
+    workbooks
+    
+    {
+        id
+        name
+        projectName
+        #owner{name}
+        #owner{id}
+        tags{name}
+        description
+        vizportalUrlId
+    }   
+}

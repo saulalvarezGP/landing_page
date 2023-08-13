@@ -1,0 +1,9 @@
+query EmbeddedDS{
+    workbooks
+    (filter: {id:"${id}"})
+    {
+        id
+        owner{name}
+
+    }   
+}
