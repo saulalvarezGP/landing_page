@@ -48,6 +48,7 @@ def get_customquery_previous(server,df_wbs):
 
         # NESTED DATA
         print(pd.DataFrame(data[0]['embeddedDS'][0]))
+        # pd.DataFrame(data[0]['embeddedDS'][0]).to_csv('_borrar.csv')
         data = [
             [
                 [
@@ -89,9 +90,7 @@ def get_workbook_owners(server,df_wbs):
     return df_wbs
 
 def save_thumbnails(server,df):
-    
     for i,row in df.iterrows():
-        # if i > 0: continue
         print(i,row.luid,f'{(i+1)/df.shape[0]:.1%}')
         workbooks = server.workbooks
         workbook = workbooks.get_by_id(row.luid)
@@ -105,16 +104,7 @@ def get_workbook_ids(server):
     data = pd.DataFrame(data['data']['workbooks'])
     data['url']     = 'https://us-east-1.online.tableau.com/#/site/globalizationpartners/workbooks/'+data.vizportalUrlId+'/views'
     data['img_url'] = 'https://raw.githubusercontent.com/saulalvarezGP/landing_page/main/thumbnails/'+data.luid+'.png'
-    # data['img_url'] = 'https://us-east-1.online.tableau.com/vizportal/api/rest/v1/workbooks/'+data.vizportalUrlId+'/thumbnail'
-    
-    # import numpy as np
-    # data['img_url'] = data.url.apply(lambda _ : [
-    #     'https://images.klipfolio.com/website/public/22b133bc-124d-44f4-85f8-9170b08d3ce9/dashboard-examples-hero.png',
-    #     r'https://blog.bismart.com/hs-fs/hubfs/captura%20dashboard%20cuadro%20de%20mando%20bismart%20customer%20journey.jpg?width=1928&name=captura%20dashboard%20cuadro%20de%20mando%20bismart%20customer%20journey.jpg',
-    #     r'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2OxYTWo1PuFOUUvUd0ViDCZuR8TUqI58L0Q&usqp=CAU'
-    # ][np.random.randint(0,2+1)]
-    # )
-    # print(data)
+
     return data
 
 def main():
@@ -127,18 +117,18 @@ def main():
     server.auth.sign_in(tableau_auth)
 
     df_wbs = get_workbook_ids(server)
-    df_wbs.to_csv('01_workbooks.csv', index=False)
     save_thumbnails(server,df_wbs)
+    df_wbs.to_csv('01_workbooks.csv', index=False)
+    
     
     df_wbs = get_workbook_owners(server, df_wbs)
     df_wbs.to_csv('01_workbooks_with_owners.csv', index=False)
-    return
     
-    # df_ds  = get_customquery_previous(server, df_wbs)
-    # df_ds.to_csv('02_customqueries_tables.csv', index=False)
+    df_ds  = get_customquery_previous(server, df_wbs)
+    df_ds.to_csv('02_customqueries_tables.csv', index=False)
     
-    # df_tables = get_tables_from_custqueries()
-    # df_tables.to_csv('03_full_table_extraction.csv', index=False)
+    df_tables = get_tables_from_custqueries()
+    df_tables.to_csv('03_full_table_extraction.csv', index=False)
 
 
 if __name__=='__main__':
