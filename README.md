@@ -2,7 +2,7 @@
 Landing Page for better navigation and discovery. 
 
 ## Context
-To get Tableau's Project/Workbooks/Views metadata we used a table provided by the DE team called *tablau*
+To get Tableau's Project/Workbooks/Views metadata we used a schema provided by the DE team called *tablaeu*
 
 Since discovering we can access this data via API's and Python we created the Landing Page using this method instead.
 

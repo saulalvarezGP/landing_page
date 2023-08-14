@@ -104,17 +104,17 @@ def get_workbook_ids(server):
     data = server.metadata.query(graphQL)
     data = pd.DataFrame(data['data']['workbooks'])
     data['url']     = 'https://us-east-1.online.tableau.com/#/site/globalizationpartners/workbooks/'+data.vizportalUrlId+'/views'
+    data['img_url'] = 'https://raw.githubusercontent.com/saulalvarezGP/landing_page/main/thumbnails/'+data.luid+'.png'
     # data['img_url'] = 'https://us-east-1.online.tableau.com/vizportal/api/rest/v1/workbooks/'+data.vizportalUrlId+'/thumbnail'
     
-    
-    import numpy as np
-    data['img_url'] = data.url.apply(lambda _ : [
-        'https://images.klipfolio.com/website/public/22b133bc-124d-44f4-85f8-9170b08d3ce9/dashboard-examples-hero.png',
-        r'https://blog.bismart.com/hs-fs/hubfs/captura%20dashboard%20cuadro%20de%20mando%20bismart%20customer%20journey.jpg?width=1928&name=captura%20dashboard%20cuadro%20de%20mando%20bismart%20customer%20journey.jpg',
-        r'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2OxYTWo1PuFOUUvUd0ViDCZuR8TUqI58L0Q&usqp=CAU'
-    ][np.random.randint(0,2+1)]
-    )
-    print(data)
+    # import numpy as np
+    # data['img_url'] = data.url.apply(lambda _ : [
+    #     'https://images.klipfolio.com/website/public/22b133bc-124d-44f4-85f8-9170b08d3ce9/dashboard-examples-hero.png',
+    #     r'https://blog.bismart.com/hs-fs/hubfs/captura%20dashboard%20cuadro%20de%20mando%20bismart%20customer%20journey.jpg?width=1928&name=captura%20dashboard%20cuadro%20de%20mando%20bismart%20customer%20journey.jpg',
+    #     r'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2OxYTWo1PuFOUUvUd0ViDCZuR8TUqI58L0Q&usqp=CAU'
+    # ][np.random.randint(0,2+1)]
+    # )
+    # print(data)
     return data
 
 def main():
@@ -129,7 +129,6 @@ def main():
     df_wbs = get_workbook_ids(server)
     df_wbs.to_csv('01_workbooks.csv', index=False)
     save_thumbnails(server,df_wbs)
-    return
     
     df_wbs = get_workbook_owners(server, df_wbs)
     df_wbs.to_csv('01_workbooks_with_owners.csv', index=False)
