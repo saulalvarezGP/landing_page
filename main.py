@@ -12,14 +12,11 @@ def _get_customquery_tables(q):
 
     ls = [d for l in ls for d in l]
     ls = [s for s in ls if '.' in s]
-    # df['schema'] = df.sources.str.split('.').apply(lambda l: l[0])
-    # df['table'] = df.sources.str.split('.').apply(lambda l: l[1])
     return list(set(ls))
 
 def get_tables_from_custqueries():
     df = pd.read_csv('02_customqueries_tables.csv')
     df['customquery_datasources'] = df.customQuery.apply(lambda s: _get_customquery_tables(str(s)))
-    df.to_csv('_borrar.csv', index=False)
     print(df)
     data = [[
         {
@@ -44,7 +41,7 @@ def get_customquery_previous(server,df_wbs):
         print(f'\tloading {i+1}/{df_wbs.shape[0]} ({(i+1)/df_wbs.shape[0]:.1%}) | {df_wbs[df_wbs.id==id].id.iloc[0]} | {df_wbs[df_wbs.id==id].name.iloc[0]}')
         q = open('_custom_query.graphql','r').read().replace(r'${id}',id)
         data = server.metadata.query(q)
-        data = data['data']['workbooks']        
+        data = data['data']['workbooks']
 
         # NESTED DATA
         print(pd.DataFrame(data[0]['embeddedDS'][0]))
@@ -119,7 +116,6 @@ def main():
     df_wbs = get_workbook_ids(server)
     save_thumbnails(server,df_wbs)
     df_wbs.to_csv('01_workbooks.csv', index=False)
-    
     
     df_wbs = get_workbook_owners(server, df_wbs)
     df_wbs.to_csv('01_workbooks_with_owners.csv', index=False)
