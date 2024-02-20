@@ -1,5 +1,5 @@
-import warnings; warnings.filterwarnings('ignore')
-import tableauserverclient as TSC
+import warnings; warnings.filterwarnings('ignore') #<-- default de python
+import tableauserverclient as TSC #<--- este es el unico por descargar
 import pandas as pd
 
 def _get_customquery_tables(q):
@@ -106,16 +106,18 @@ def get_workbook_ids(server):
 
 def main():
     tableau_auth = TSC.PersonalAccessTokenAuth(
-        'mi_token2', 
-        '3RoLZiAITXif4GwgkeI5WQ==:q1dyfCvtcFG8vN1aOnVrLrsGwvg9iVWu', 
+        'mi_token',
+        'rtV5aGbESfyu2+KhMs9Axw==:cucmPGijwevg2TAO8FwCiZdxQMq1Nqrg', #<---- aqui va el secreto
         'globalizationpartners'
     )
     server = TSC.Server('https://us-east-1.online.tableau.com', use_server_version=True)
     server.auth.sign_in(tableau_auth)
 
     df_wbs = get_workbook_ids(server)
-    save_thumbnails(server,df_wbs)
+    
+    # save_thumbnails(server,df_wbs)
     df_wbs.to_csv('01_workbooks.csv', index=False)
+    return
     
     df_wbs = get_workbook_owners(server, df_wbs)
     df_wbs.to_csv('01_workbooks_with_owners.csv', index=False)

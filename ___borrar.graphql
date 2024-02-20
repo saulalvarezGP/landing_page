@@ -1,0 +1,35 @@
+query EmbeddedDS{
+    workbooks
+    (filter: {id:"967d1fdb-3654-f65a-11f8-4fcd66574bb1"})
+    {
+        id
+        sheets{
+            sheetID:id
+            visualization: name
+            containedInDashboards{id name}
+            instancedFields: sheetFieldInstances{
+                fieldName:name
+                originalName:fullyQualifiedName
+                ...on CalculatedField{
+                    formula
+                }
+                ...on ColumnField{
+                    customQueryContainer:columns{
+                        table{
+                            ...on CustomSQLTable{
+                                query
+                            }
+                        }
+                    }
+                }
+            }
+
+            #worksheetFields{
+            #    id
+            #}
+            #necessaryFields: datasourceFields{
+            #    name
+            #}x
+        }
+    }   
+}
