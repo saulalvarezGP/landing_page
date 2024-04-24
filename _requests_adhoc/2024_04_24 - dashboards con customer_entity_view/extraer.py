@@ -61,45 +61,18 @@ def encontrar_fuente(campo, query):
     print('\n'*2)
     
 def _run_graphql(server,this_path):
-    # q = open(f'{this_path}/graph_query.graphql','r').read()
-    # data = server.metadata.query(q)
-    # print(data)
-
-
-    req_option_views = TSC.RequestOptions(pagesize=1000)
-    
-    all_users, pagination_item = server.users.get(req_options=req_option_views)
-    all_users = [usr for usr in all_users if usr.name=='AMestancik@g-p.com']
-    print("\nThere are {} user on site: ".format(pagination_item.total_available))
-    print([user.name for user in all_users])
-
-
-    page_n = server.users.populate_workbooks(all_users[0])
-    print("\nUser {0} owns or has READ permissions for {1} workbooks".format(all_users[0].name, page_n.total_available))
-    print("\nThe workbooks are:")
-    for workbook in all_users[0].workbooks :
-        print(workbook.name)
-
+    q = open(f'{this_path}/graph_query.graphql','r').read()
+    data = server.metadata.query(q)
+    print(data)
     return
-    page_n = server.users.populate_groups(all_users[0])
-    print("\nUser {0} is a member of {1} groups".format(all_users[0].name, page_n.total_available))
-    print("\nThe groups are:")
-    for group in all_users[0].groups :
-        print(group.name)
 
-    return
-    print("\nUser {0} is a member of {1} groups".format(all_users[0].name, page_n.total_available))
-    print("\nThe groups are:")
-    for group in all_users[0].groups :
-        print(group.name)
-
-    return
     # d = data['data']['workbooks'][0]['embeddedDatasources']
     # print(d)
     # print(pd.DataFrame(d))
     
     data = data['data']['workbooks'][0]['sheets']
     df = pd.DataFrame(data)
+    
     
     df['dashboardName'] = df.containedInDashboards.apply(lambda l: l[0]['name'] if len(l) > 0 else np.nan)
     df['dashboardID'] = df.containedInDashboards.apply(lambda l: l[0]['id'] if len(l) > 0 else np.nan)

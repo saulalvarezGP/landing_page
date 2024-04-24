@@ -1,8 +1,24 @@
 query EmbeddedDS{
-    tableauUsers
-    
-    {   
+    workbooks
+    (filter: {id:"7ced6095-f0dd-2b05-8ea7-a7da1c256023"})
+    {
         id
-        username
-    }
+        embeddedDS: embeddedDatasources{
+            datasourceName: name
+            fields {
+                fieldName: name
+                ...on ColumnField{
+                    columns{
+                        table{
+                            ...on CustomSQLTable{
+                                customSQLName: name
+                                connectionType
+                                query
+                            }
+                        }
+                    }
+                }
+            }
+        } 
+    }   
 }
