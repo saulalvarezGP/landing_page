@@ -1,0 +1,14 @@
+query EmbeddedDS{
+    workbooks
+    (filter: {id:"d1a63b80-7d16-06cf-09a4-34292ffa58b0"}) #<----- uno por uno
+    {
+        name
+        embeddedDatasources{
+            datasource:name
+            upstreamDatabases{
+                connectionType
+                #isEmbedded
+            }
+        }
+    }   
+}
