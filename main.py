@@ -107,11 +107,13 @@ def get_workbook_ids(server):
 def main():
     tableau_auth = TSC.PersonalAccessTokenAuth(
         'mi_token',
-        'rtV5aGbESfyu2+KhMs9Axw==:cucmPGijwevg2TAO8FwCiZdxQMq1Nqrg', #<---- aqui va el secreto
+        '0Rq/p74sRYObZWjTsC6HLQ==:fLBFsiHpfjjiMXPSlDC8jJ1mVa1WHeVU', #<---- aqui va el secreto
         'globalizationpartners'
     )
     server = TSC.Server('https://us-east-1.online.tableau.com', use_server_version=True)
+    server.add_http_options({'verify': False})
     server.auth.sign_in(tableau_auth)
+    server.version = '3.5'
 
     df_wbs = get_workbook_ids(server)
     

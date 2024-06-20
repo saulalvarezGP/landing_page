@@ -63,7 +63,16 @@ def encontrar_fuente(campo, query):
 def _run_graphql(server,this_path):
     q = open(f'{this_path}/graph_query.graphql','r').read()
     data = server.metadata.query(q)
-    print(data)
+    fields = data['data']['workbooks'][0]['embeddedDS'][0]['fields']
+    
+    d = fields[1]
+    print(d)
+    print(type(d))
+    print(d.keys())
+    
+    # df = pd.DataFrame(data)
+    # data = server.metadata.query(q)
+    
     return
 
     # d = data['data']['workbooks'][0]['embeddedDatasources']
@@ -112,11 +121,13 @@ def _run_graphql(server,this_path):
 def main():
     tableau_auth = TSC.PersonalAccessTokenAuth(
         'mi_token',
-        'bB/kYrazTN6cTNCBAyIxaQ==:0Mo8DoDLaKevgqtFT3MOPtj2H8WZ6LC5', #<---- aqui va el secreto
+        'NIn4qSpiRm+aqjCmlVhVVQ==:C6HrJWkEw1lRLweU8UGgcyD5M7b6KO9l', #<---- aqui va el secreto
         'globalizationpartners'
     )
     server = TSC.Server('https://us-east-1.online.tableau.com', use_server_version=True)
+    server.add_http_options({'verify': False})
     server.auth.sign_in(tableau_auth)
+    server.version = '3.5'
 
     this_path = '/'.join(__file__.split('/')[:-1])
     _run_graphql(server,this_path)

@@ -1,0 +1,18 @@
+query EmbeddedDS{
+  users {
+    username
+    email
+    groups {
+      name
+    }
+    workbookPermissions {
+      workbook {
+        name
+      }
+      capabilities {
+        name
+        status
+      }
+    }
+  }
+}

@@ -139,7 +139,7 @@ def _run_graphql(server,this_path):
 def main():
     tableau_auth = TSC.PersonalAccessTokenAuth(
         'mi_token',
-        'bB/kYrazTN6cTNCBAyIxaQ==:0Mo8DoDLaKevgqtFT3MOPtj2H8WZ6LC5', #<---- aqui va el secreto
+        'NIn4qSpiRm+aqjCmlVhVVQ==:C6HrJWkEw1lRLweU8UGgcyD5M7b6KO9l', #<---- aqui va el secreto
         'globalizationpartners'
     )
     server = TSC.Server('https://us-east-1.online.tableau.com', use_server_version=True)
